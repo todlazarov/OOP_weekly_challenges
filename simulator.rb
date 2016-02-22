@@ -5,19 +5,15 @@ class Simulator
   end
 
   def evaluate(name, str)
-    instructions(str).each do |instruction|
-      name.send(instruction)
-    end
+    instructions(str).each { |instruction| name.send(instruction) }
   end
 
   def instructions(str)
     str.chars.map do |let|
-      if let == 'L'
-        :turn_left
-      elsif let == 'R'
-        :turn_right
-      elsif let == 'A'
-        :advance
+      case let
+      when 'L' then :turn_left
+      when 'R' then :turn_right
+      when 'A' then :advance
       end
     end
   end
