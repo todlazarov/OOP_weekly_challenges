@@ -1,7 +1,7 @@
 class Simulator
-  def place(name, args)
-    name.at(args[:x], args[:y])
-    name.orient(args[:direction])
+  def place(name, position_data)
+    name.at(position_data[:x], position_data[:y])
+    name.orient(position_data[:direction])
   end
 
   def evaluate(name, str)
@@ -11,25 +11,21 @@ class Simulator
   end
 
   def instructions(str)
-    results = []
-    instruc = str.split('')
-
-    instruc. each do |let|
-      case let
-      when 'L'
-        results << :turn_left
-      when 'R'
-        results << :turn_right
-      when 'A'
-      results << :advance
+    str.chars.map do |let|
+      if let == 'L'
+        :turn_left
+      elsif let == 'R'
+        :turn_right
+      elsif let == 'A'
+        :advance
       end
     end
-
-    results
   end
 end
 
 class Robot < Simulator
+  attr_reader :coordinates
+
   ORIENTATIONS = [:west, :north, :east, :south]
 
   def initialize(x=0,y=0)
@@ -50,10 +46,6 @@ class Robot < Simulator
     @coordinates = [x, y]
   end
 
-  def coordinates
-    @coordinates
-  end
-
   def turn_left
     idx = ORIENTATIONS.index(bearing)
     orient(ORIENTATIONS[idx - 1])
@@ -67,14 +59,10 @@ class Robot < Simulator
 
   def advance
     case bearing
-    when :north
-      @coordinates[1] += 1
-    when :east
-      @coordinates[0] += 1
-    when :south 
-      @coordinates[1] -= 1
-    when :west
-      @coordinates[0] -= 1
+    when :north then @coordinates[1] += 1
+    when :east then @coordinates[0] += 1
+    when :south  then @coordinates[1] -= 1
+    when :west then @coordinates[0] -= 1
     end
   end
 end
